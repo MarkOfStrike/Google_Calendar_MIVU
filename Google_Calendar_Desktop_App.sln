@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google_Calendar_Desktop_App", "Google_Calendar_Desktop_App.csproj", "{C0A58524-3D0C-49AD-B20E-744843184DDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0A58524-3D0C-49AD-B20E-744843184DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0A58524-3D0C-49AD-B20E-744843184DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0A58524-3D0C-49AD-B20E-744843184DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0A58524-3D0C-49AD-B20E-744843184DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC95628B-9128-42B3-A48B-DB971C3E191D}
+	EndGlobalSection
+EndGlobal
