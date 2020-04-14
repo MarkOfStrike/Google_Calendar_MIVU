@@ -3,6 +3,7 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,7 @@ namespace Google_Calendar_Desktop_App
     {
         private CalendarService Service { get; set; }
         public string User { get; set; }
-
+        public bool Connect { get; set; }
 
 
         public CalendarWork(string keyFilePath, string user)
@@ -51,7 +52,7 @@ namespace Google_Calendar_Desktop_App
                     ApplicationName = "My Calendar v0.1",
                 });
 
-
+                MessageBox.Show("Авторизация выполнена!");
 
             }
             catch (Exception ex)
@@ -62,9 +63,9 @@ namespace Google_Calendar_Desktop_App
 
 
 
-        public Events GetEvents()
+        public Events GetEvents(string calendarName = "primary")
         {
-            EventsResource.ListRequest request = Service.Events.List("primary");
+            EventsResource.ListRequest request = Service.Events.List(calendarName);//В скобках название календаря 'primary' использует календарь по умолчанию
             request.TimeMin = DateTime.Now;
             request.ShowDeleted = false;
             request.SingleEvents = true;
@@ -72,9 +73,6 @@ namespace Google_Calendar_Desktop_App
             request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
 
             Events events = request.Execute();
-
-            
-
 
             return events;
 
@@ -86,12 +84,14 @@ namespace Google_Calendar_Desktop_App
         /// <param name="summary">Заголовок события</param>
         /// <param name="start">Дата начала</param>
         /// <param name="end">Дата конца</param>
+        /// <param name="calendarName">Идентификатор календаря</param>
         /// <param name="location">Место проведения</param>
         /// <param name="Emails">Адреса упоминаний</param>
-        public void CreateEvent(string summary, DateTime start, DateTime end, string location = null, List<string> Emails = null)
+        public void CreateEvent(string summary, DateTime start, DateTime end, string calendarName, string location = null, List<string> Emails = null)
         {
             Event body = new Event();
 
+            
             List<EventAttendee> attendees = new List<EventAttendee>();
             foreach (var mail in Emails)
             {
@@ -111,16 +111,28 @@ namespace Google_Calendar_Desktop_App
             body.Location = location;
             body.Summary = summary;
 
+
+            EventsResource.InsertRequest request = new EventsResource.InsertRequest(Service, body, calendarName);//Вместо user надо вставить название для календаря
+
             try
             {
-                EventsResource.InsertRequest request = new EventsResource.InsertRequest(Service, body, User);
+                
                 Event response = request.Execute();
 
                 MessageBox.Show("Событие создано!");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                if (!Connect)
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+                
             }
 
         }
@@ -129,24 +141,50 @@ namespace Google_Calendar_Desktop_App
         /// Удаление событие календаря
         /// </summary>
         /// <param name="event">Событие</param>
-        public void DeleteEvent(Event @event)
+        public void DeleteEvent(Event @event, string calendarName)
         {
-            EventsResource.DeleteRequest request = new EventsResource.DeleteRequest(Service, User, @event.Id);
-            //Event response = request.Execute();
-            request.Execute();
+            if (Connect)
+            {
+                EventsResource.DeleteRequest request = new EventsResource.DeleteRequest(Service, calendarName, @event.Id);
+                //Event response = request.Execute();
+                request.Execute();
 
-            MessageBox.Show("Событие удалено!");
+                
+
+                MessageBox.Show("Событие удалено!");
+            }
+            else
+            {
+
+            }
+
         }
 
 
-        public void UpdateEvent(Event @event)
+        public void UpdateEvent(Event @event, string calendarName)
         {
-            EventsResource.UpdateRequest request = new EventsResource.UpdateRequest(Service, @event, User, @event.Id);
+            EventsResource.UpdateRequest request = new EventsResource.UpdateRequest(Service, @event, calendarName, @event.Id);//Вместо User использовать название календаря
             Event resource = request.Execute();
 
             MessageBox.Show("Событие обновлено");
 
         }
+
+
+        /// <summary>
+        /// Получение списка календарей
+        /// </summary>
+        /// <returns></returns>
+        public CalendarList GetCalendarsName()
+        {
+            var request = Service.CalendarList.List();
+            var result = request.Execute();
+
+            return result;
+        }
+
+
+
 
 
 
