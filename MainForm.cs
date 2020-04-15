@@ -29,16 +29,30 @@ namespace Google_Calendar_Desktop_App
         private CalendarWork work;
         private List<Color> colors = new List<Color>();
 
+        private WorkBD wbd = new WorkBD();
+
         private int month;
         private int year;
 
 
-
-        private bool connect;
-
         public MainForm()
         {
             InitializeComponent();
+
+            List<char> mas = new List<char>();
+
+            for (int i = 0; i < 26; i++)
+            {
+                mas.Add((char)(65+i));
+                mas.Add((char)(97+i));
+            }
+
+            for (int q = 0; q < 10; q++)
+            {
+                mas.Add((char)(48 + q));
+            }
+
+            work.Identity = mas.ToArray();
 
             month = DateTime.Now.Month;
             year = DateTime.Now.Year;
@@ -50,10 +64,13 @@ namespace Google_Calendar_Desktop_App
             work.Connect = Check_Connect();
 
 
-            foreach (var item in work.GetCalendarsName().Items)
-            {
-                Calendar_s.Add(new Calendar_Events { idCalendar = item.Id, nameCalendar = item.Summary, calendar = item, events = work.GetEvents(item.Id).Items.ToList()});
-            }
+            Filling();
+
+
+            //foreach (var item in work.GetCalendarsName().Items)
+            //{
+            //    Calendar_s.Add(new Calendar_Events { idCalendar = item.Id, nameCalendar = item.Summary, calendar = item, events = work.GetEvents(item.Id).Items.ToList()});
+            //}
 
             //dataGridView2.Columns[2].Visible = false;
 
@@ -69,6 +86,12 @@ namespace Google_Calendar_Desktop_App
             foreach (var items in Calendar_s)
             {
                 checkedListBox1.Items.Add(items.nameCalendar);
+
+                if ((bool)items.calendar.Primary)
+                {
+                    checkedListBox1.SetItemChecked(checkedListBox1.Items.Count - 1, true);
+                }
+
                 foreach (var events in items.events)
                 {
                     dataGridView2.Rows.Add(++count,events.Summary, Convert.ToDateTime(events.Start.Date).ToShortDateString(), items.calendar.Id, events.Id /*Convert.ToDateTime(events.Start.Date).ToShortDateString()*/);
@@ -78,6 +101,11 @@ namespace Google_Calendar_Desktop_App
             }
 
             var itemName = Calendar_s.Find(x => x.calendar.Summary == checkedListBox1.Items[1].ToString()).events.Find(p => p.Summary == "");
+
+            //List<Calendar_Events> sddsa = Calendar_s.Where(x => x.calendar.Summary == checkedListBox1.Items.ToString());
+
+            
+
             //var ev = itemName.events.Find(p => p.Summary == dataGridView2.Rows[2].Cells[1].Value.ToString());
 
             //var sd = Calendar_s
@@ -86,6 +114,19 @@ namespace Google_Calendar_Desktop_App
 
         }
 
+        /// <summary>
+        /// Заполнение листа с календарями и событиями
+        /// </summary>
+        private void Filling()
+        {
+            Calendar_s.Clear();
+
+            foreach (var calendar in work.GetCalendarsName().Items)
+            {
+                Calendar_s.Add(new Calendar_Events { calendar = calendar, idCalendar = calendar.Id, nameCalendar = calendar.Summary, events = work.GetEvents(calendar.Id).Items.ToList() });
+            }
+
+        }
 
         /// <summary>
         /// Проверка интернет соединения
@@ -171,8 +212,7 @@ namespace Google_Calendar_Desktop_App
 
             int firstDayOfWeek = 0;
 
-            //DateTime first = new DateTime(date.Year, date.Month, 1);
-
+            
             switch (first.DayOfWeek.ToString())
             {
                 case "Monday":
@@ -219,14 +259,10 @@ namespace Google_Calendar_Desktop_App
                     {
                         while (day < DateTime.DaysInMonth(first.Year, first.Month) + 1)
                         {
-                            //var sq = $"{day} \n{day} \n{day} \n{day} \n{day} \n{day} \n{day} \n{day} \n";
-
-                            //for (int f = 0; f < 3; f++)
-                            //{
-                            //    dataGridView3.Rows[i].Cells[j].Value += $"{day} \n";
-                            //}
-
                             dataGridView3.Rows[i].Cells[j].Value = $"{day} \n\n";
+
+                            //Здесь написать алгоритм отрисовки элементов чтобы все ячейки были одного размера
+
                             day++;
                             j++;
                         }
@@ -234,13 +270,6 @@ namespace Google_Calendar_Desktop_App
 
                     if (day < DateTime.DaysInMonth(first.Year, first.Month) + 1)
                     {
-                        //var sd = $"{day} \n{day} \n{day} \n{day} \n{day} \n{day} \n{day} \n{day} \n";
-
-                        //for (int f = 0; f < 3; f++)
-                        //{
-                        //    dataGridView3.Rows[i].Cells[j].Value += $"{day} \n";
-                        //}
-
                         dataGridView3.Rows[i].Cells[j].Value = $"{day} \n\n";
                         day++;
                     }
@@ -249,17 +278,6 @@ namespace Google_Calendar_Desktop_App
 
 
             }
-
-            //for (int a = 0; a < dataGridView3.Rows.Count; a++)
-            //{
-            //    for (int s = 0; s < dataGridView3.Rows[a].Cells.Count; s++)
-            //    {
-            //        dataGridView3.Rows[a].Cells[s].Style.
-            //    }
-            //}
-
-
-            //dataGridView3.Rows[2].Cells[4].Value += $"\n\nЛя ля ля";
 
 
         }
@@ -284,24 +302,99 @@ namespace Google_Calendar_Desktop_App
             Drawing_Calendar(new DateTime(year, month, 1));
         }
 
-
+        /// <summary>
+        /// Метод синхронизации данных с сервером
+        /// </summary>
         private void Synchronization()
         {
+            work.Connect = Check_Connect();
+
+            
             if (work.Connect)
             {
+                var delEvent = wbd.Select_query($"select nc.calendar_name, ec.Id, ec.Calendar_Event from Del_Event de, Name_Calendar nc, Events_calendar ec where nc.Id = (select NameId from Activity where Id = de.Event_Cal_id) and ec.Id = (select EvendId from Activity where Id = de.Event_Cal_id)");
+                while (delEvent.Read())
+                {
+                    var Cal = JsonConvert.DeserializeObject<CalendarListEntry>(delEvent.GetString(0));
+                    var Eve = JsonConvert.DeserializeObject<Event>(delEvent.GetString(2));
+
+                    wbd.Execution_query($"delete from Events_calendar where Id = {delEvent.GetInt32(1)}");
+
+                    work.DeleteEvent(Eve, Cal.Id);
+                    
+                }
+
+
+                var insEvent = wbd.Select_query($"select nc.calendar_name, ie.New_Ev from Ins_Event ie, Name_Calendar nc where nc.Id = ie.Cal_Id");
+                while (insEvent.Read())
+                {
+                    var Cal = JsonConvert.DeserializeObject<CalendarListEntry>(insEvent.GetString(0));
+                    var Eve = JsonConvert.DeserializeObject<Event>(insEvent.GetString(1));
+
+                    work.CreateEvent(Eve, Cal.Id);
+
+                }
+                wbd.Execution_query("delete from Ins_Event");
+
+
+                var modEvent = wbd.Select_query($"select ec.Id  me.New_Event, nc.calendar_name from Mod_Event me, Events_calendar ec, Name_Calendar nc where ec.Id = (select EvendId from Activity where Id = me.RecordId) and nc.id = me.New_Calendar");
+                while (modEvent.Read())
+                {
+                    var newEvent = JsonConvert.DeserializeObject<Event>(modEvent.GetString(1));
+                    var Cal = JsonConvert.DeserializeObject<CalendarListEntry>(modEvent.GetString(2));
+
+                    wbd.Execution_query($"delete from Events_calendar where id = {modEvent.GetInt32(0)}");
+
+                    work.UpdateEvent(newEvent, Cal);
+
+                }
+
+
+
+
+                Filling();
+
+                foreach (var items in Calendar_s)
+                {
+
+                    foreach (var events in items.events)
+                    {
+                        var result = wbd.Select_query($"select Id from Activity where NameId = (select Id from Name_Calendar where calendar_name = '{JsonConvert.SerializeObject(items.calendar)}') and EvendId = (select Id from Events_calendar where calendar_event = '{JsonConvert.SerializeObject(events)}')");
+
+                        if (!result.HasRows)
+                        {
+                            var check_ev = wbd.Select_query($"select Id from Events_calendar where Calendar_events = '{JsonConvert.SerializeObject(events)}'");
+                            if (check_ev.HasRows)
+                            {
+                                while (check_ev.Read())
+                                {
+                                    wbd.Execution_query($"delete from Events_calendar where Id = {check_ev.GetInt32(0)}");
+                                }
+
+                                wbd.Execution_query($"insert into Events_calendar (Calendar_event) values ('{JsonConvert.SerializeObject(events)}')");
+                                wbd.Execution_query($"insert into Activity (NameId, EvendId, Date_Event) values ((select Id from Name_Calendar where calendar_name = '{JsonConvert.SerializeObject(items.calendar)}'), (select Id from Events_calendar where Calendar_event = '{JsonConvert.SerializeObject(events)}'), '{Convert.ToDateTime(events.Start.DateTime)}')");
+                            }
+                        }
+
+                    }
+
+                }
+
 
             }
             else
             {
-
+                Filling();
             }
+
+            Drawing_Calendar(new DateTime(year, month, 1));
+
         }
+
 
 
         private void updEvent_Tick(object sender, EventArgs e)
         {
-            work.Connect = Check_Connect();
-
             Synchronization();
         }
 
