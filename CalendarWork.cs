@@ -20,9 +20,10 @@ namespace Google_Calendar_Desktop_App
         private CalendarService Service { get; set; }
         public string User { get; set; }
         public bool Connect { get; set; }
-        public char[] Identity { get; set; }
+        //public List<char> Identity = new List<char>();
+        public char[] Identity;
 
-        private WorkBD wbd = new WorkBD();
+        //private WorkBD wbd = new WorkBD();
         private Random ran = new Random();
 
         public CalendarWork(string keyFilePath, string user)
@@ -64,9 +65,12 @@ namespace Google_Calendar_Desktop_App
             }
         }
 
+        public CalendarWork()
+        {
 
+        }
 
-        public Events GetEvents(string calendarName = "primary")
+        public Events GetEvents(string calendarName = "primary", int maxRes = 10)
         {
             Events events = null;
 
@@ -76,7 +80,7 @@ namespace Google_Calendar_Desktop_App
                 request.TimeMin = DateTime.Now;
                 request.ShowDeleted = false;
                 request.SingleEvents = true;
-                request.MaxResults = 10;
+                request.MaxResults = maxRes;
                 request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
 
                 events = request.Execute();
@@ -88,7 +92,7 @@ namespace Google_Calendar_Desktop_App
                     calendarName = "primary:true";
                 }
 
-                var event_s = wbd.Select_query($"select top(10) ec.Calendar_event from Activity a, Name_Calendar nc, Events_calendar ec where ec.Id = a.EvendId and Date_Event > '{DateTime.Now}'  and a.NameId = (select id from Name_Calendar where calendar_name like '%{calendarName}%') order by Date_Event");
+                var event_s = WorkBD.Select_query($"select top({maxRes}) ec.Calendar_event from Activity a, Name_Calendar nc, Events_calendar ec where ec.Id = a.EvendId and Date_Event > '{DateTime.Now}'  and a.NameId = (select id from Name_Calendar where calendar_name like '%{calendarName}%') order by Date_Event");
 
                 List<Event> ev = new List<Event>();
 
@@ -109,6 +113,48 @@ namespace Google_Calendar_Desktop_App
         }
 
 
+        public Events GetAllEvents(string calendarName = "primaty")
+        {
+            Events events = null;
+
+            if (Connect)
+            {
+                EventsResource.ListRequest request = Service.Events.List(calendarName);//В скобках название календаря 'primary' использует календарь по умолчанию
+                request.TimeMin = new DateTime(2000, 1, 1, 0,0,0);
+                request.ShowDeleted = false;
+                request.SingleEvents = true;
+                request.MaxResults = 2500;
+                request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
+
+                events = request.Execute();
+            }
+            else
+            {
+                if (calendarName == "primary")
+                {
+                    calendarName = "primary:true";
+                }
+
+                var event_s = WorkBD.Select_query($"select ec.Calendar_event from Activity a, Name_Calendar nc, Events_calendar ec where ec.Id = a.EvendId and Date_Event > '{DateTime.Now}'  and a.NameId = (select id from Name_Calendar where calendar_name like '%{calendarName}%') order by Date_Event");
+
+                List<Event> ev = new List<Event>();
+
+                while (event_s.Read())
+                {
+                    events.Items.Add(JsonConvert.DeserializeObject<Event>(event_s.GetString(0)));
+                }
+
+                event_s.Close();
+                events.Items.OrderBy(x => x.Start);
+
+
+
+            }
+
+
+            return events;
+        }
+
 
         /// <summary>
         /// Создание нового события в календаре
@@ -119,7 +165,7 @@ namespace Google_Calendar_Desktop_App
         /// <param name="calendarName">Идентификатор календаря</param>
         /// <param name="location">Место проведения</param>
         /// <param name="Emails">Адреса упоминаний</param>
-        public void CreateEvent(string summary, DateTime start, DateTime end, string calendarName, string location = null, List<string> Emails = null)
+        public void CreateEvent(string summary, DateTime start, DateTime end, string calendarName, string description, string location = null, List<string> Emails = null)
         {
             Event body = new Event();
 
@@ -132,6 +178,7 @@ namespace Google_Calendar_Desktop_App
 
             body.Attendees = attendees;
 
+
             EventDateTime _start = new EventDateTime();
             _start.DateTime = start;
 
@@ -142,6 +189,7 @@ namespace Google_Calendar_Desktop_App
             body.End = _end;
             body.Location = location;
             body.Summary = summary;
+            body.Description = description;
 
 
             if (Connect)
@@ -159,7 +207,7 @@ namespace Google_Calendar_Desktop_App
                     body.Id += Identity[ran.Next(0, Identity.Length + 1)].ToString();
                 }
 
-                wbd.Execution_query($"insert into Ins_Event (Cal_Id, New_Ev) values ((select id from Name_Calendar where calendar_name like '&{calendarName}&'), {JsonConvert.SerializeObject(body)})");
+                WorkBD.Execution_query($"insert into Ins_Event (Cal_Id, New_Ev) values ((select id from Name_Calendar where calendar_name like '&{calendarName}&'), {JsonConvert.SerializeObject(body)})");
 
                 MessageBox.Show("Запись добавлена в локальную базу данных!");
             }
@@ -201,7 +249,7 @@ namespace Google_Calendar_Desktop_App
             {
                 int idEvent = 0;
 
-                var result = wbd.Select_query($"select id from Events_Calendar where Calendar_event = '{JsonConvert.SerializeObject(@event)}'");
+                var result = WorkBD.Select_query($"select id from Events_Calendar where Calendar_event = '{JsonConvert.SerializeObject(@event)}'");
 
                 if (result.HasRows)
                 {
@@ -210,14 +258,15 @@ namespace Google_Calendar_Desktop_App
                         idEvent = result.GetInt32(0);
                     }
 
-                    wbd.Execution_query($"insert into Del_Event (Events_Cal_id) values ((select id from activity where EvendId = {idEvent}))");
+                    result.Close();
+                    WorkBD.Execution_query($"insert into Del_Event (Events_Cal_id) values ((select id from activity where EvendId = {idEvent}))");
 
                     MessageBox.Show("Событие добавлено на очередь для удаления!");
 
                 }
                 else
                 {
-                    var nextVariant = wbd.Select_query($"select id from Ins_Event where New_Ev = '{JsonConvert.SerializeObject(@event)}'");
+                    var nextVariant = WorkBD.Select_query($"select id from Ins_Event where New_Ev = '{JsonConvert.SerializeObject(@event)}'");
 
                     if (nextVariant.HasRows)
                     {
@@ -225,8 +274,9 @@ namespace Google_Calendar_Desktop_App
                         {
                             idEvent = nextVariant.GetInt32(0);
                         }
+                        nextVariant.Close();
 
-                        wbd.Execution_query($"delete from Ins_Event where id = {idEvent}");
+                        WorkBD.Execution_query($"delete from Ins_Event where id = {idEvent}");
 
                         MessageBox.Show("Событие удалено из локальной базы данных");
                     }
@@ -252,7 +302,7 @@ namespace Google_Calendar_Desktop_App
             }
             else
             {
-                wbd.Execution_query($"insert into Mod_Event (RecordId, New_Event, New_Calendar) values ((select Id from Activity where EvendId = (select Id from Events_calendar where Calendar_event = '{JsonConvert.SerializeObject(source_event)}')), '{JsonConvert.SerializeObject(new_event)}', (select Id from Name_Calendar where calendar_name = '{JsonConvert.SerializeObject(calendar)}'))");
+                WorkBD.Execution_query($"insert into Mod_Event (RecordId, New_Event, New_Calendar) values ((select Id from Activity where EvendId = (select Id from Events_calendar where Calendar_event = '{JsonConvert.SerializeObject(source_event)}')), '{JsonConvert.SerializeObject(new_event)}', (select Id from Name_Calendar where calendar_name = '{JsonConvert.SerializeObject(calendar)}'))");
             }
 
 
@@ -278,11 +328,12 @@ namespace Google_Calendar_Desktop_App
             }
             else
             {
-                var caList = wbd.Select_query($"select calendar_name from Name_Calendar");
+                var caList = WorkBD.Select_query($"select calendar_name from Name_Calendar");
                 while (caList.Read())
                 {
                     result.Items.Add(JsonConvert.DeserializeObject<CalendarListEntry>(caList.GetString(0)));
                 }
+                caList.Close();
             }
 
             
