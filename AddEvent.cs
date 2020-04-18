@@ -14,12 +14,14 @@ namespace Google_Calendar_Desktop_App
     public partial class AddEvent : Form
     {
         private List<CalendarListEntry> calendars = new List<CalendarListEntry>();
+        private CalendarWork work;
 
-        public AddEvent()
+
+        public AddEvent(CalendarWork wrk)
         {
             InitializeComponent();
 
-            CalendarWork work = new CalendarWork();
+            work = wrk;
 
             calendars.AddRange(work.GetCalendarsName().Items);
 
@@ -30,6 +32,19 @@ namespace Google_Calendar_Desktop_App
 
             CalendarsForEvents.Text = CalendarsForEvents.Items[0].ToString();
 
+        }
+
+        private void closeBtn_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void createEvent_Click(object sender, EventArgs e)
+        {
+            work.CreateEvent(eventSummary.Text, eventStart.Value, eventEnd.Value, calendars[calendars.IndexOf(calendars.Find(x => x.Summary == CalendarsForEvents.Text))].Id, eventDescription.Text, eventAttendees.Text.Split('\n').ToList(), eventLocation.Text);
+
+            MessageBox.Show("Запись создана!");
+            Close();
         }
     }
 }

@@ -43,7 +43,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.createEvent = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.closeBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CalendarsForEvents
@@ -184,24 +184,26 @@
             this.createEvent.TabIndex = 51;
             this.createEvent.Text = "Создать";
             this.createEvent.UseVisualStyleBackColor = true;
+            this.createEvent.Click += new System.EventHandler(this.createEvent_Click);
             // 
-            // button1
+            // closeBtn
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(168, 422);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(187, 35);
-            this.button1.TabIndex = 52;
-            this.button1.Text = "Отмена";
-            this.button1.UseVisualStyleBackColor = true;
+            this.closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.closeBtn.Location = new System.Drawing.Point(168, 422);
+            this.closeBtn.Name = "closeBtn";
+            this.closeBtn.Size = new System.Drawing.Size(187, 35);
+            this.closeBtn.TabIndex = 52;
+            this.closeBtn.Text = "Отмена";
+            this.closeBtn.UseVisualStyleBackColor = true;
+            this.closeBtn.Click += new System.EventHandler(this.closeBtn_Click);
             // 
             // AddEvent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(363, 469);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.createEvent);
             this.Controls.Add(this.CalendarsForEvents);
             this.Controls.Add(this.label1);
@@ -241,6 +243,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button createEvent;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button closeBtn;
     }
 }

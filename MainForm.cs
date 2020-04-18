@@ -43,7 +43,7 @@ namespace Google_Calendar_Desktop_App
             this.Icon = Resources.Google_Calendar_icon_icons_com_75710;
 
             work = new CalendarWork("credentials.json", "MarkOfStrike");
-            work.Connect = Check_Connect();
+            //work.Connect = Check_Connect();
 
             List<char> mas = new List<char>();
 
@@ -78,6 +78,7 @@ namespace Google_Calendar_Desktop_App
             foreach (var items in Calendar_s)
             {
                 calendarsItem.Items.Add(items.nameCalendar);
+                CalendarsForEvents.Items.Add(items.nameCalendar);
 
                 if (items.calendar.Primary != null && items.calendar.Primary == true)
                 {
@@ -91,6 +92,7 @@ namespace Google_Calendar_Desktop_App
 
             }
 
+            CalendarsForEvents.Text = CalendarsForEvents.Items[0].ToString();
 
             Month(month);
             Drawing_Calendar(new DateTime(year, month, 1));
@@ -358,10 +360,10 @@ namespace Google_Calendar_Desktop_App
         /// </summary>
         private void Synchronization()
         {
-            work.Connect = Check_Connect();
+            //work.Connect = Check_Connect();
 
             
-            if (work.Connect)
+            if (CalendarWork.Connect)
             {
                 connectStatus.Text = "Соединение есть";
                 connectStatus.Image = Resources.connect;
@@ -495,6 +497,20 @@ namespace Google_Calendar_Desktop_App
         {
             month--;
             Click_btn();
+        }
+
+        private void createEvent_Click(object sender, EventArgs e)
+        {
+            AddEvent add = new AddEvent(work);
+            add.ShowDialog();
+            Synchronization();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            work.CreateEvent(eventSummary.Text, eventStart.Value, eventEnd.Value, Calendar_s.Find(x => x.nameCalendar == CalendarsForEvents.Text).calendar.Id, string.IsNullOrEmpty(eventDescription.Text) ? null : eventDescription.Text, string.IsNullOrEmpty(eventAttendees.Text) ? null : eventAttendees.Text.Split('\n').ToList(), string.IsNullOrEmpty(eventLocation.Text) ? null : eventLocation.Text);
+
+            MessageBox.Show("Запись создана!");
         }
     }
 }

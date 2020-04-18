@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,8 @@ namespace Google_Calendar_Desktop_App
     {
         private CalendarService Service { get; set; }
         public string User { get; set; }
-        public bool Connect { get; set; }
+        //public bool Connect { get; set; }
+        public static bool Connect { get; set; }
         //public List<char> Identity = new List<char>();
         public char[] Identity;
 
@@ -30,13 +32,15 @@ namespace Google_Calendar_Desktop_App
         {
             User = user;
 
+            StartTimer();
+
             try
             {
                 string[] Scopes = {
 
                     CalendarService.Scope.Calendar,
-                    CalendarService.Scope.CalendarEvents,
-                    CalendarService.Scope.CalendarEventsReadonly
+                    CalendarService.Scope.CalendarEvents
+                    //CalendarService.Scope.CalendarEventsReadonly
 
                 };
 
@@ -67,7 +71,13 @@ namespace Google_Calendar_Desktop_App
 
         public CalendarWork()
         {
+            StartTimer();
+        }
 
+        private static void StartTimer()
+        {
+            TimerCallback tm = new TimerCallback(Check_Connect);
+            System.Threading.Timer timer = new System.Threading.Timer(tm, Connect, 0, 5000);
         }
 
         public Events GetEvents(string calendarName = "primary", int maxRes = 10)
@@ -165,18 +175,23 @@ namespace Google_Calendar_Desktop_App
         /// <param name="calendarName">Идентификатор календаря</param>
         /// <param name="location">Место проведения</param>
         /// <param name="Emails">Адреса упоминаний</param>
-        public void CreateEvent(string summary, DateTime start, DateTime end, string calendarName, string description, string location = null, List<string> Emails = null)
+        public void CreateEvent(string summary, DateTime start, DateTime end, string calendarName, string description = null, List<string> Emails = null, string location = null)
         {
             Event body = new Event();
 
             
-            List<EventAttendee> attendees = new List<EventAttendee>();
-            foreach (var mail in Emails)
+            
+            if (Emails != null)
             {
-                attendees.Add(new EventAttendee { Email = mail });
-            }
+                List<EventAttendee> attendees = new List<EventAttendee>();
+                foreach (var mail in Emails)
+                {
+                    attendees.Add(new EventAttendee { Email = mail });
+                }
 
-            body.Attendees = attendees;
+                body.Attendees = attendees;
+            }
+            
 
 
             EventDateTime _start = new EventDateTime();
@@ -342,7 +357,23 @@ namespace Google_Calendar_Desktop_App
 
 
 
-
+        /// <summary>
+        /// Проверка интернет соединения
+        /// </summary>
+        /// <returns></returns>
+        private static void Check_Connect(object obj)
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("http://google.com/generate_204"))
+                    Connect = true;
+            }
+            catch
+            {
+                Connect = false;
+            }
+        }
 
 
 
