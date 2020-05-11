@@ -35,13 +35,6 @@
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.updEvent = new System.Windows.Forms.Timer(this.components);
             this.createEvent = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.upcomingEvents = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.eventSelectDay = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -72,119 +65,46 @@
             this.connectStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.label8 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.closeBtn = new System.Windows.Forms.Button();
-            this.crEve = new System.Windows.Forms.Button();
-            this.CalendarsForEvents = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.eventEnd = new System.Windows.Forms.DateTimePicker();
-            this.eventStart = new System.Windows.Forms.DateTimePicker();
-            this.eventSummary = new System.Windows.Forms.TextBox();
-            this.eventAttendees = new System.Windows.Forms.RichTextBox();
-            this.eventLocation = new System.Windows.Forms.TextBox();
-            this.eventDescription = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.upcomingEvents)).BeginInit();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.upcomingEvents = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eventSelectDay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upcomingEvents)).BeginInit();
             this.SuspendLayout();
             // 
             // monthCalendar1
             // 
             this.monthCalendar1.Location = new System.Drawing.Point(18, 523);
+            this.monthCalendar1.MaxSelectionCount = 1;
             this.monthCalendar1.Name = "monthCalendar1";
             this.monthCalendar1.TabIndex = 1;
             // 
             // updEvent
             // 
             this.updEvent.Enabled = true;
-            this.updEvent.Interval = 10000;
+            this.updEvent.Interval = 3000;
             this.updEvent.Tick += new System.EventHandler(this.updEvent_Tick);
             // 
             // createEvent
             // 
             this.createEvent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.createEvent.Location = new System.Drawing.Point(704, 662);
+            this.createEvent.Location = new System.Drawing.Point(681, 662);
             this.createEvent.Name = "createEvent";
-            this.createEvent.Size = new System.Drawing.Size(321, 33);
+            this.createEvent.Size = new System.Drawing.Size(344, 33);
             this.createEvent.TabIndex = 3;
             this.createEvent.Text = "Создать новое событие";
             this.createEvent.UseVisualStyleBackColor = true;
             this.createEvent.Click += new System.EventHandler(this.createEvent_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.upcomingEvents);
-            this.groupBox2.Location = new System.Drawing.Point(6, 33);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(327, 579);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Предстоящие события";
-            // 
-            // upcomingEvents
-            // 
-            this.upcomingEvents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.upcomingEvents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.upcomingEvents.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.Column4,
-            this.Column5});
-            this.upcomingEvents.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.upcomingEvents.Location = new System.Drawing.Point(3, 16);
-            this.upcomingEvents.Name = "upcomingEvents";
-            this.upcomingEvents.RowHeadersVisible = false;
-            this.upcomingEvents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.upcomingEvents.Size = new System.Drawing.Size(321, 560);
-            this.upcomingEvents.TabIndex = 0;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.FillWeight = 45.68528F;
-            this.dataGridViewTextBoxColumn1.HeaderText = "№";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.FillWeight = 127.1574F;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Заголовок";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.FillWeight = 127.1574F;
-            this.dataGridViewTextBoxColumn3.HeaderText = "Дата";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "IdCal";
-            this.Column4.Name = "Column4";
-            this.Column4.Visible = false;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "IdEv";
-            this.Column5.Name = "Column5";
-            this.Column5.Visible = false;
             // 
             // groupBox1
             // 
@@ -198,6 +118,8 @@
             // 
             // eventSelectDay
             // 
+            this.eventSelectDay.AllowUserToAddRows = false;
+            this.eventSelectDay.AllowUserToDeleteRows = false;
             this.eventSelectDay.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.eventSelectDay.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.eventSelectDay.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -208,7 +130,9 @@
             this.dataGridViewTextBoxColumn5});
             this.eventSelectDay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eventSelectDay.Location = new System.Drawing.Point(3, 16);
+            this.eventSelectDay.MultiSelect = false;
             this.eventSelectDay.Name = "eventSelectDay";
+            this.eventSelectDay.ReadOnly = true;
             this.eventSelectDay.RowHeadersVisible = false;
             this.eventSelectDay.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.eventSelectDay.Size = new System.Drawing.Size(276, 162);
@@ -219,29 +143,34 @@
             this.Column1.FillWeight = 45.68528F;
             this.Column1.HeaderText = "№";
             this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
             // 
             // Column2
             // 
             this.Column2.FillWeight = 127.1574F;
             this.Column2.HeaderText = "Заголовок";
             this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
             // 
             // Column3
             // 
             this.Column3.FillWeight = 127.1574F;
             this.Column3.HeaderText = "Дата";
             this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
             // 
             // dataGridViewTextBoxColumn4
             // 
             this.dataGridViewTextBoxColumn4.HeaderText = "IdCal";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
             this.dataGridViewTextBoxColumn4.Visible = false;
             // 
             // dataGridViewTextBoxColumn5
             // 
             this.dataGridViewTextBoxColumn5.HeaderText = "IdEv";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
             this.dataGridViewTextBoxColumn5.Visible = false;
             // 
             // monthOfYear
@@ -302,6 +231,7 @@
             this.dataGridView3.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridView3.Location = new System.Drawing.Point(3, 65);
+            this.dataGridView3.MultiSelect = false;
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.ReadOnly = true;
             this.dataGridView3.RowHeadersVisible = false;
@@ -429,15 +359,15 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 9);
+            this.label8.Location = new System.Drawing.Point(678, 12);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(90, 13);
-            this.label8.TabIndex = 8;
+            this.label8.TabIndex = 11;
             this.label8.Text = "Кол-во событий:";
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(102, 7);
+            this.numericUpDown1.Location = new System.Drawing.Point(774, 10);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -450,230 +380,83 @@
             0});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(45, 20);
-            this.numericUpDown1.TabIndex = 9;
+            this.numericUpDown1.TabIndex = 12;
             this.numericUpDown1.Value = new decimal(new int[] {
-            1,
+            10,
             0,
             0,
             0});
             // 
-            // tabControl1
+            // groupBox2
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(678, 12);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(347, 644);
-            this.tabControl1.TabIndex = 10;
+            this.groupBox2.Controls.Add(this.upcomingEvents);
+            this.groupBox2.Location = new System.Drawing.Point(678, 36);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(347, 620);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Предстоящие события";
             // 
-            // tabPage1
+            // upcomingEvents
             // 
-            this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.numericUpDown1);
-            this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(339, 618);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Просмотр";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.upcomingEvents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.upcomingEvents.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.Column4,
+            this.Column5});
+            this.upcomingEvents.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.upcomingEvents.Location = new System.Drawing.Point(3, 16);
+            this.upcomingEvents.MultiSelect = false;
+            this.upcomingEvents.Name = "upcomingEvents";
+            this.upcomingEvents.RowHeadersVisible = false;
+            this.upcomingEvents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.upcomingEvents.Size = new System.Drawing.Size(341, 601);
+            this.upcomingEvents.TabIndex = 0;
+            this.upcomingEvents.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.upcomingEvents_CellDoubleClick);
             // 
-            // tabPage2
+            // dataGridViewTextBoxColumn1
             // 
-            this.tabPage2.Controls.Add(this.closeBtn);
-            this.tabPage2.Controls.Add(this.crEve);
-            this.tabPage2.Controls.Add(this.CalendarsForEvents);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.eventEnd);
-            this.tabPage2.Controls.Add(this.eventStart);
-            this.tabPage2.Controls.Add(this.eventSummary);
-            this.tabPage2.Controls.Add(this.eventAttendees);
-            this.tabPage2.Controls.Add(this.eventLocation);
-            this.tabPage2.Controls.Add(this.eventDescription);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(339, 618);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Добавить";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.dataGridViewTextBoxColumn1.FillWeight = 45.68528F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "№";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 48;
             // 
-            // tabPage3
+            // dataGridViewTextBoxColumn2
             // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(339, 618);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "tabPage3";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.dataGridViewTextBoxColumn2.FillWeight = 127.1574F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "Заголовок";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.Width = 135;
             // 
-            // closeBtn
+            // dataGridViewTextBoxColumn3
             // 
-            this.closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.closeBtn.Location = new System.Drawing.Point(166, 431);
-            this.closeBtn.Name = "closeBtn";
-            this.closeBtn.Size = new System.Drawing.Size(167, 35);
-            this.closeBtn.TabIndex = 68;
-            this.closeBtn.Text = "Отмена";
-            this.closeBtn.UseVisualStyleBackColor = true;
+            this.dataGridViewTextBoxColumn3.FillWeight = 127.1574F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Дата";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.Width = 135;
             // 
-            // crEve
+            // Column4
             // 
-            this.crEve.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.crEve.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.crEve.Location = new System.Drawing.Point(9, 431);
-            this.crEve.Name = "crEve";
-            this.crEve.Size = new System.Drawing.Size(142, 35);
-            this.crEve.TabIndex = 67;
-            this.crEve.Text = "Создать";
-            this.crEve.UseVisualStyleBackColor = true;
-            this.crEve.Click += new System.EventHandler(this.button1_Click);
+            this.Column4.HeaderText = "IdCal";
+            this.Column4.Name = "Column4";
+            this.Column4.Visible = false;
             // 
-            // CalendarsForEvents
+            // Column5
             // 
-            this.CalendarsForEvents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CalendarsForEvents.FormattingEnabled = true;
-            this.CalendarsForEvents.Location = new System.Drawing.Point(77, 387);
-            this.CalendarsForEvents.Name = "CalendarsForEvents";
-            this.CalendarsForEvents.Size = new System.Drawing.Size(256, 21);
-            this.CalendarsForEvents.TabIndex = 66;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(177, 56);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(19, 13);
-            this.label1.TabIndex = 65;
-            this.label1.Text = "——";
-            // 
-            // eventEnd
-            // 
-            this.eventEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.eventEnd.Location = new System.Drawing.Point(202, 50);
-            this.eventEnd.Name = "eventEnd";
-            this.eventEnd.Size = new System.Drawing.Size(71, 20);
-            this.eventEnd.TabIndex = 64;
-            // 
-            // eventStart
-            // 
-            this.eventStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.eventStart.Location = new System.Drawing.Point(77, 50);
-            this.eventStart.Name = "eventStart";
-            this.eventStart.Size = new System.Drawing.Size(74, 20);
-            this.eventStart.TabIndex = 63;
-            // 
-            // eventSummary
-            // 
-            this.eventSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventSummary.Location = new System.Drawing.Point(77, 15);
-            this.eventSummary.Name = "eventSummary";
-            this.eventSummary.Size = new System.Drawing.Size(256, 20);
-            this.eventSummary.TabIndex = 62;
-            // 
-            // eventAttendees
-            // 
-            this.eventAttendees.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventAttendees.Location = new System.Drawing.Point(77, 233);
-            this.eventAttendees.Name = "eventAttendees";
-            this.eventAttendees.Size = new System.Drawing.Size(256, 105);
-            this.eventAttendees.TabIndex = 61;
-            this.eventAttendees.Text = "";
-            // 
-            // eventLocation
-            // 
-            this.eventLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventLocation.Location = new System.Drawing.Point(77, 356);
-            this.eventLocation.Name = "eventLocation";
-            this.eventLocation.Size = new System.Drawing.Size(256, 20);
-            this.eventLocation.TabIndex = 60;
-            // 
-            // eventDescription
-            // 
-            this.eventDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventDescription.Location = new System.Drawing.Point(77, 96);
-            this.eventDescription.Multiline = true;
-            this.eventDescription.Name = "eventDescription";
-            this.eventDescription.Size = new System.Drawing.Size(256, 120);
-            this.eventDescription.TabIndex = 59;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 387);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 13);
-            this.label7.TabIndex = 58;
-            this.label7.Text = "Календарь:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(11, 96);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(60, 13);
-            this.label6.TabIndex = 57;
-            this.label6.Text = "Описание:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(29, 356);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(42, 13);
-            this.label5.TabIndex = 56;
-            this.label5.Text = "Место:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(32, 233);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 13);
-            this.label4.TabIndex = 55;
-            this.label4.Text = "Гости:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(35, 56);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 13);
-            this.label3.TabIndex = 54;
-            this.label3.Text = "Дата:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 18);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 53;
-            this.label2.Text = "Название:";
+            this.Column5.HeaderText = "IdEv";
+            this.Column5.Name = "Column5";
+            this.Column5.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1033, 727);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.createEvent);
             this.Controls.Add(this.groupBox4);
@@ -682,8 +465,6 @@
             this.Controls.Add(this.monthCalendar1);
             this.Name = "MainForm";
             this.Text = "Google calendar ";
-            this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.upcomingEvents)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.eventSelectDay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
@@ -692,11 +473,8 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.upcomingEvents)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -706,17 +484,10 @@
         private System.Windows.Forms.MonthCalendar monthCalendar1;
         private System.Windows.Forms.Timer updEvent;
         private System.Windows.Forms.Button createEvent;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridView upcomingEvents;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView eventSelectDay;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.CheckedListBox calendarsItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
@@ -743,26 +514,13 @@
         private System.Windows.Forms.ToolStripStatusLabel connectStatus;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button closeBtn;
-        private System.Windows.Forms.Button crEve;
-        private System.Windows.Forms.ComboBox CalendarsForEvents;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DateTimePicker eventEnd;
-        private System.Windows.Forms.DateTimePicker eventStart;
-        private System.Windows.Forms.TextBox eventSummary;
-        private System.Windows.Forms.RichTextBox eventAttendees;
-        private System.Windows.Forms.TextBox eventLocation;
-        private System.Windows.Forms.TextBox eventDescription;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridView upcomingEvents;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
     }
 }
 

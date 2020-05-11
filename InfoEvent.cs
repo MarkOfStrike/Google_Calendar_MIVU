@@ -19,32 +19,47 @@ namespace Google_Calendar_Desktop_App
 
         private Event workEvent;
 
+        private CalendarWork Work;
 
-        public InfoEvent(Event selectEvent, CalendarListEntry selectCalendar, List<CalendarListEntry> allCalendars)
+
+        public InfoEvent(CalendarWork work ,Event selectEvent, CalendarListEntry selectCalendar/*, List<CalendarListEntry> allCalendars*/)
         {
             InitializeComponent();
 
+            this.Work = work;
+
             SelectEvent = selectEvent ?? throw new ArgumentNullException(nameof(selectEvent));//(?? оператор null-объединения)Объединение нулей x??y будет равно y если x = null, в противном случае равно x
             SourceCalendar = selectCalendar ?? throw new ArgumentNullException(nameof(selectCalendar));
-            AllCalendars = allCalendars ?? throw new ArgumentNullException(nameof(selectCalendar));
-            
+
+            //AllCalendars = allCalendars ?? throw new ArgumentNullException(nameof(allCalendars));
+            AllCalendars = work.GetCalendarsName();
+
 
 
             workEvent = SelectEvent;
 
+            var dateStart = Work.DateEvent(SelectEvent.Start);
+            var dateEnd = Work.DateEvent(SelectEvent.End);
+
             eventSummary.Text = SelectEvent.Summary;
-            eventStart.Value = Convert.ToDateTime(SelectEvent.Start).Date;
-            eventEnd.Value = Convert.ToDateTime(SelectEvent.End).Date;
+            eventStart.Value = dateStart.Date;
+            //eventStart.Value = DateTime.Parse(SelectEvent.Start.DateTime.ToString() ?? SelectEvent.Start.Date ?? SelectEvent.Start.DateTimeRaw);
+            eventEnd.Value = dateEnd.Date;
+            //eventEnd.Value = DateTime.Parse(SelectEvent.End.DateTime.ToString() ?? SelectEvent.End.Date ?? SelectEvent.End.DateTimeRaw).Date;
             eventDescription.Text = SelectEvent.Description;
-            foreach (var attend in SelectEvent.Attendees)
+            if (SelectEvent.Attendees != null)
             {
-                eventAttendees.AppendText(attend.Email);
+                foreach (var attend in SelectEvent.Attendees)
+                {
+                    eventAttendees.AppendText(attend.Email);
+                }
             }
+            
             eventLocation.Text = SelectEvent.Location;
 
             foreach (var calendar in AllCalendars)
             {
-                CalendarsForEvents.Items.Add(calendar);
+                CalendarsForEvents.Items.Add(calendar.Summary);
             }
             CalendarsForEvents.Text = SourceCalendar.Summary;
 
@@ -53,9 +68,51 @@ namespace Google_Calendar_Desktop_App
 
         }
 
+        private void canelMod_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void modEvent_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(eventSummary.Text))
+            {
+                SelectEvent.Summary = SelectEvent.Summary == eventSummary.Text ? SelectEvent.Summary : eventSummary.Text;
+                SelectEvent.Start.DateTime = SelectEvent.Start.DateTime == eventStart.Value ? SelectEvent.Start.DateTime : eventStart.Value;
+                SelectEvent.End.DateTime = SelectEvent.End.DateTime == eventEnd.Value ? SelectEvent.End.DateTime : eventEnd.Value;
+                SelectEvent.Description = string.IsNullOrWhiteSpace(eventDescription.Text) ? null : eventDescription.Text;
+                SelectEvent.Attendees = string.IsNullOrWhiteSpace(eventAttendees.Text) ? null : AttendeesForEvent(eventAttendees.Text);
+                SelectEvent.Location = string.IsNullOrWhiteSpace(eventLocation.Text) ? null : eventLocation.Text;
+
+                Work.UpdateEvent(SelectEvent, SourceCalendar, SourceCalendar != AllCalendars[CalendarsForEvents.SelectedIndex] ? AllCalendars[CalendarsForEvents.SelectedIndex].Id : null);
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Название не может быть пустым!");
+            }
+
+            
 
 
+        }
 
+        private List<EventAttendee> AttendeesForEvent(string text)
+        {
+            List<EventAttendee> attendees = new List<EventAttendee>();
 
+            foreach (var mail in text.Split('\n'))
+            {
+                attendees.Add(new EventAttendee { Email = mail });
+            }
+
+            return attendees;
+        }
+
+        private void delEvent_Click(object sender, EventArgs e)
+        {
+            Work.DeleteEvent(SelectEvent, SourceCalendar.Id);
+            Close();
+        }
     }
 }

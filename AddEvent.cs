@@ -23,7 +23,7 @@ namespace Google_Calendar_Desktop_App
 
             work = wrk;
 
-            calendars.AddRange(work.GetCalendarsName().Items);
+            calendars.AddRange(work.GetCalendarsName());
 
             foreach (var item in calendars)
             {
@@ -41,7 +41,7 @@ namespace Google_Calendar_Desktop_App
 
         private void createEvent_Click(object sender, EventArgs e)
         {
-            work.CreateEvent(eventSummary.Text, eventStart.Value, eventEnd.Value, calendars[calendars.IndexOf(calendars.Find(x => x.Summary == CalendarsForEvents.Text))].Id, eventDescription.Text, eventAttendees.Text.Split('\n').ToList(), eventLocation.Text);
+            work.CreateEvent(eventSummary.Text, eventStart.Value, eventEnd.Value, calendars[CalendarsForEvents.SelectedIndex].Id, string.IsNullOrEmpty(eventDescription.Text) ? null : eventDescription.Text, string.IsNullOrEmpty(eventAttendees.Text) ? null : eventAttendees.Text.Split('\n').ToList(), string.IsNullOrEmpty(eventLocation.Text) ? null : eventLocation.Text);
 
             MessageBox.Show("Запись создана!");
             Close();

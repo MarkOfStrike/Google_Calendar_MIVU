@@ -11,56 +11,141 @@ namespace Google_Calendar_Desktop_App
 {
     public class WorkBD
     {
-        private static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Prese\source\repos\Google_Calendar_Desktop_App\Calendar_Events.mdf;Integrated Security=True";
+        private static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Prese\source\repos\Google_Calendar_Desktop_App\Calendar_Events.mdf;Integrated Security=True;MultipleActiveResultSets=True";
+
+        private static SqlConnectionStringBuilder cs = new SqlConnectionStringBuilder {
+            MultipleActiveResultSets = true,
+            DataSource = @"(LocalDB)\MSSQLLocalDB",
+            AttachDBFilename = @"C:\Users\Prese\source\repos\Google_Calendar_Desktop_App\Calendar_Events.mdf",
+            IntegratedSecurity = true
+        };
 
         #region 1 вариант
 
 
 
-        private static SqlConnection connection = new SqlConnection(connectionString);
+        private static SqlConnection connection = new SqlConnection(cs.ToString());
 
         /// <summary>
         /// Метод выполнения запроса
         /// </summary>
         /// <param name="query">Запрос</param>
-        public static void Execution_query(string query)
+        public async static void Execution_query(string query)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(cs.ToString()))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 SqlCommand command = new SqlCommand(query, connection);
-                command.ExecuteNonQuery();
+                await command.ExecuteNonQueryAsync();
+                //connection.Close();
                 //MessageBox.Show("Команда выполнена");
             }
         }
 
+        ///// <summary>
+        ///// Метод выполнения запроса
+        ///// </summary>
+        ///// <param name="query">Запрос</param>
+        //public static void Execution_query(string query)
+        //{
+        //        SqlCommand command = new SqlCommand(query, connection);
+        //        command.ExecuteNonQuery();
+        //        //MessageBox.Show("Команда выполнена");
+
+        //}
+
+
+        ///// <summary>
+        ///// Выполнение Select запросов
+        ///// </summary>
+        ///// <param name="query">Запрос</param>
+        ///// <returns>Данные выборки</returns>
+        //public static SqlDataReader Select_query(string query)
+        //{
+
+        //    SqlCommand command = new SqlCommand(query, connection);
+        //    SqlDataReader reader = command.ExecuteReader();
+
+        //    //reader.Close();
+
+
+        //    return reader;
+        //}
+
+
         /// <summary>
         /// Выполнение Select запросов
         /// </summary>
-        /// <param name="query">Запрос</param>
-        /// <returns>Данные выборки</returns>
-        public static SqlDataReader Select_query(string query)
+        /// <param name = "query" > Запрос </ param >
+        /// < returns > Данные выборки</returns>
+        public static DataTable Select_query(string query)
         {
+            using (SqlConnection connection = new SqlConnection(cs.ToString()))
+            {
+                connection.Open();
 
-            SqlCommand command = new SqlCommand(query, connection);
-            SqlDataReader reader = command.ExecuteReader();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
 
-            //reader.Close();
+                DataTable dt = new DataTable();
+                dt.Load(reader);
+                //connection.Close();
+                return dt;
+            }
 
 
 
-            return reader;
         }
+
+
+
 
         public static void Open_con()
         {
-            connection.Open();
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+            
         }
 
         public static void Close_con()
         {
-            connection.Close();
+            if (connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            
         }
+
+
+        public static string Encode_text(string text, bool side)
+        {
+            Encoding source = null;
+            Encoding end = null;
+
+            if (side)
+            {
+                source = Encoding.Default;
+                end = Encoding.UTF8;
+
+                return text;
+
+            }
+            else
+            {
+                source = Encoding.UTF8;
+                end = Encoding.Default;
+
+                byte[] sourceText = end.GetBytes(text);
+                byte[] endText = Encoding.Convert(source, end, sourceText);
+
+                return end.GetString(endText);
+            }
+
+            
+        }
+
 
         #endregion
 

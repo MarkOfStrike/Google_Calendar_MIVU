@@ -54,7 +54,7 @@
             this.CalendarsForEvents.FormattingEnabled = true;
             this.CalendarsForEvents.Location = new System.Drawing.Point(193, 437);
             this.CalendarsForEvents.Name = "CalendarsForEvents";
-            this.CalendarsForEvents.Size = new System.Drawing.Size(209, 21);
+            this.CalendarsForEvents.Size = new System.Drawing.Size(207, 21);
             this.CalendarsForEvents.TabIndex = 33;
             // 
             // label1
@@ -88,7 +88,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eventSummary.Location = new System.Drawing.Point(192, 65);
             this.eventSummary.Name = "eventSummary";
-            this.eventSummary.Size = new System.Drawing.Size(308, 20);
+            this.eventSummary.Size = new System.Drawing.Size(306, 20);
             this.eventSummary.TabIndex = 29;
             // 
             // eventAttendees
@@ -97,7 +97,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eventAttendees.Location = new System.Drawing.Point(192, 283);
             this.eventAttendees.Name = "eventAttendees";
-            this.eventAttendees.Size = new System.Drawing.Size(307, 105);
+            this.eventAttendees.Size = new System.Drawing.Size(305, 105);
             this.eventAttendees.TabIndex = 28;
             this.eventAttendees.Text = "";
             // 
@@ -107,7 +107,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eventLocation.Location = new System.Drawing.Point(193, 406);
             this.eventLocation.Name = "eventLocation";
-            this.eventLocation.Size = new System.Drawing.Size(209, 20);
+            this.eventLocation.Size = new System.Drawing.Size(207, 20);
             this.eventLocation.TabIndex = 27;
             // 
             // eventDescription
@@ -117,29 +117,31 @@
             this.eventDescription.Location = new System.Drawing.Point(192, 146);
             this.eventDescription.Multiline = true;
             this.eventDescription.Name = "eventDescription";
-            this.eventDescription.Size = new System.Drawing.Size(307, 120);
+            this.eventDescription.Size = new System.Drawing.Size(305, 120);
             this.eventDescription.TabIndex = 26;
             // 
             // canelMod
             // 
             this.canelMod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.canelMod.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.canelMod.Location = new System.Drawing.Point(409, 464);
+            this.canelMod.Location = new System.Drawing.Point(407, 464);
             this.canelMod.Name = "canelMod";
             this.canelMod.Size = new System.Drawing.Size(91, 23);
             this.canelMod.TabIndex = 25;
             this.canelMod.Text = "Отмена";
             this.canelMod.UseVisualStyleBackColor = false;
+            this.canelMod.Click += new System.EventHandler(this.canelMod_Click);
             // 
             // modEvent
             // 
             this.modEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.modEvent.Location = new System.Drawing.Point(409, 435);
+            this.modEvent.Location = new System.Drawing.Point(407, 435);
             this.modEvent.Name = "modEvent";
             this.modEvent.Size = new System.Drawing.Size(91, 23);
             this.modEvent.TabIndex = 24;
             this.modEvent.Text = "Изменить";
             this.modEvent.UseVisualStyleBackColor = true;
+            this.modEvent.Click += new System.EventHandler(this.modEvent_Click);
             // 
             // label7
             // 
@@ -198,18 +200,19 @@
             // delEvent
             // 
             this.delEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.delEvent.Location = new System.Drawing.Point(409, 406);
+            this.delEvent.Location = new System.Drawing.Point(407, 406);
             this.delEvent.Name = "delEvent";
             this.delEvent.Size = new System.Drawing.Size(91, 23);
             this.delEvent.TabIndex = 17;
             this.delEvent.Text = "Удалить";
             this.delEvent.UseVisualStyleBackColor = true;
+            this.delEvent.Click += new System.EventHandler(this.delEvent_Click);
             // 
             // InfoEvent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 633);
+            this.ClientSize = new System.Drawing.Size(694, 539);
             this.Controls.Add(this.CalendarsForEvents);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.eventEnd);
@@ -252,6 +255,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button delEvent;
+        public System.Windows.Forms.Button delEvent;
     }
 }
