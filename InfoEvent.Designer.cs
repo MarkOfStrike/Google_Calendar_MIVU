@@ -52,7 +52,7 @@
             this.CalendarsForEvents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CalendarsForEvents.FormattingEnabled = true;
-            this.CalendarsForEvents.Location = new System.Drawing.Point(193, 437);
+            this.CalendarsForEvents.Location = new System.Drawing.Point(79, 387);
             this.CalendarsForEvents.Name = "CalendarsForEvents";
             this.CalendarsForEvents.Size = new System.Drawing.Size(207, 21);
             this.CalendarsForEvents.TabIndex = 33;
@@ -60,7 +60,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(292, 103);
+            this.label1.Location = new System.Drawing.Point(178, 53);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(19, 13);
             this.label1.TabIndex = 32;
@@ -69,24 +69,26 @@
             // eventEnd
             // 
             this.eventEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.eventEnd.Location = new System.Drawing.Point(317, 100);
+            this.eventEnd.Location = new System.Drawing.Point(203, 50);
             this.eventEnd.Name = "eventEnd";
             this.eventEnd.Size = new System.Drawing.Size(91, 20);
             this.eventEnd.TabIndex = 31;
+            this.eventEnd.ValueChanged += new System.EventHandler(this.eventEnd_ValueChanged);
             // 
             // eventStart
             // 
             this.eventStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.eventStart.Location = new System.Drawing.Point(192, 100);
+            this.eventStart.Location = new System.Drawing.Point(78, 50);
             this.eventStart.Name = "eventStart";
             this.eventStart.Size = new System.Drawing.Size(94, 20);
             this.eventStart.TabIndex = 30;
+            this.eventStart.ValueChanged += new System.EventHandler(this.eventStart_ValueChanged);
             // 
             // eventSummary
             // 
             this.eventSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventSummary.Location = new System.Drawing.Point(192, 65);
+            this.eventSummary.Location = new System.Drawing.Point(78, 15);
             this.eventSummary.Name = "eventSummary";
             this.eventSummary.Size = new System.Drawing.Size(306, 20);
             this.eventSummary.TabIndex = 29;
@@ -95,7 +97,7 @@
             // 
             this.eventAttendees.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventAttendees.Location = new System.Drawing.Point(192, 283);
+            this.eventAttendees.Location = new System.Drawing.Point(78, 233);
             this.eventAttendees.Name = "eventAttendees";
             this.eventAttendees.Size = new System.Drawing.Size(305, 105);
             this.eventAttendees.TabIndex = 28;
@@ -105,7 +107,7 @@
             // 
             this.eventLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventLocation.Location = new System.Drawing.Point(193, 406);
+            this.eventLocation.Location = new System.Drawing.Point(79, 356);
             this.eventLocation.Name = "eventLocation";
             this.eventLocation.Size = new System.Drawing.Size(207, 20);
             this.eventLocation.TabIndex = 27;
@@ -114,7 +116,7 @@
             // 
             this.eventDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventDescription.Location = new System.Drawing.Point(192, 146);
+            this.eventDescription.Location = new System.Drawing.Point(78, 96);
             this.eventDescription.Multiline = true;
             this.eventDescription.Name = "eventDescription";
             this.eventDescription.Size = new System.Drawing.Size(305, 120);
@@ -124,7 +126,7 @@
             // 
             this.canelMod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.canelMod.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.canelMod.Location = new System.Drawing.Point(407, 464);
+            this.canelMod.Location = new System.Drawing.Point(293, 414);
             this.canelMod.Name = "canelMod";
             this.canelMod.Size = new System.Drawing.Size(91, 23);
             this.canelMod.TabIndex = 25;
@@ -135,7 +137,7 @@
             // modEvent
             // 
             this.modEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.modEvent.Location = new System.Drawing.Point(407, 435);
+            this.modEvent.Location = new System.Drawing.Point(293, 385);
             this.modEvent.Name = "modEvent";
             this.modEvent.Size = new System.Drawing.Size(91, 23);
             this.modEvent.TabIndex = 24;
@@ -146,7 +148,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(122, 437);
+            this.label7.Location = new System.Drawing.Point(8, 387);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 13);
             this.label7.TabIndex = 23;
@@ -155,7 +157,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(126, 146);
+            this.label6.Location = new System.Drawing.Point(12, 96);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(60, 13);
             this.label6.TabIndex = 22;
@@ -164,7 +166,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(145, 406);
+            this.label5.Location = new System.Drawing.Point(31, 356);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 21;
@@ -173,7 +175,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(144, 283);
+            this.label4.Location = new System.Drawing.Point(30, 233);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(39, 13);
             this.label4.TabIndex = 20;
@@ -182,7 +184,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(144, 106);
+            this.label3.Location = new System.Drawing.Point(30, 56);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 19;
@@ -191,7 +193,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(126, 68);
+            this.label2.Location = new System.Drawing.Point(12, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 18;
@@ -200,7 +202,7 @@
             // delEvent
             // 
             this.delEvent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.delEvent.Location = new System.Drawing.Point(407, 406);
+            this.delEvent.Location = new System.Drawing.Point(293, 356);
             this.delEvent.Name = "delEvent";
             this.delEvent.Size = new System.Drawing.Size(91, 23);
             this.delEvent.TabIndex = 17;
@@ -212,7 +214,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(694, 539);
+            this.ClientSize = new System.Drawing.Size(392, 446);
             this.Controls.Add(this.CalendarsForEvents);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.eventEnd);
@@ -230,8 +232,11 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.delEvent);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "InfoEvent";
-            this.Text = "InfoEvent";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Редактор событий";
             this.ResumeLayout(false);
             this.PerformLayout();
 

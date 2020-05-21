@@ -16,14 +16,14 @@ namespace Google_Calendar_Desktop_App
         private List<CalendarListEntry> calendars = new List<CalendarListEntry>();
         private CalendarWork work;
 
-
         public AddEvent(CalendarWork wrk)
         {
             InitializeComponent();
 
-            work = wrk;
+            this.work = wrk;
+            this.Icon = Properties.Resources.Google_Calendar_icon_icons_com_75710;
 
-            calendars.AddRange(work.GetCalendarsName());
+            calendars = work.GetCalendarsName().Where(c => c.AccessRole != "reader").ToList();
 
             foreach (var item in calendars)
             {
@@ -41,10 +41,34 @@ namespace Google_Calendar_Desktop_App
 
         private void createEvent_Click(object sender, EventArgs e)
         {
-            work.CreateEvent(eventSummary.Text, eventStart.Value, eventEnd.Value, calendars[CalendarsForEvents.SelectedIndex].Id, string.IsNullOrEmpty(eventDescription.Text) ? null : eventDescription.Text, string.IsNullOrEmpty(eventAttendees.Text) ? null : eventAttendees.Text.Split('\n').ToList(), string.IsNullOrEmpty(eventLocation.Text) ? null : eventLocation.Text);
+            if (!string.IsNullOrWhiteSpace(eventSummary.Text))
+            {
+                work.CreateEvent(eventSummary.Text, eventStart.Value, eventEnd.Value, calendars[CalendarsForEvents.SelectedIndex].Id, string.IsNullOrEmpty(eventDescription.Text) ? null : eventDescription.Text, string.IsNullOrEmpty(eventAttendees.Text) ? null : eventAttendees.Text.Split('\n').ToList(), string.IsNullOrEmpty(eventLocation.Text) ? null : eventLocation.Text);
 
-            MessageBox.Show("Запись создана!");
-            Close();
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Введите название события!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            
+        }
+
+        private void eventStart_ValueChanged(object sender, EventArgs e)
+        {
+            if (eventStart.Value > eventEnd.Value)
+            {
+                eventEnd.Value = eventStart.Value;
+            }
+        }
+
+        private void eventEnd_ValueChanged(object sender, EventArgs e)
+        {
+            if (eventEnd.Value < eventStart.Value)
+            {
+                eventStart.Value = eventEnd.Value;
+            }
         }
     }
 }

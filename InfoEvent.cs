@@ -13,40 +13,34 @@ namespace Google_Calendar_Desktop_App
 {
     public partial class InfoEvent : Form
     {
-        private Event SelectEvent { get; set; }
-        private CalendarListEntry SourceCalendar { get; set; }
-        private List<CalendarListEntry> AllCalendars { get; set; }
-
-        private Event workEvent;
+        private Event SelectEvent;
+        private CalendarListEntry SourceCalendar;
+        private List<CalendarListEntry> AllCalendars;
 
         private CalendarWork Work;
 
 
-        public InfoEvent(CalendarWork work ,Event selectEvent, CalendarListEntry selectCalendar/*, List<CalendarListEntry> allCalendars*/)
+        public InfoEvent(CalendarWork work, Event selectEvent, CalendarListEntry selectCalendar)
         {
             InitializeComponent();
 
             this.Work = work;
+            this.Icon = Properties.Resources.Google_Calendar_icon_icons_com_75710;
 
-            SelectEvent = selectEvent ?? throw new ArgumentNullException(nameof(selectEvent));//(?? оператор null-объединения)Объединение нулей x??y будет равно y если x = null, в противном случае равно x
+            SelectEvent = selectEvent ?? throw new ArgumentNullException(nameof(selectEvent));
             SourceCalendar = selectCalendar ?? throw new ArgumentNullException(nameof(selectCalendar));
 
-            //AllCalendars = allCalendars ?? throw new ArgumentNullException(nameof(allCalendars));
-            AllCalendars = work.GetCalendarsName();
+            AllCalendars = work.GetCalendarsName().Where(x => x.AccessRole != "reader").ToList();
 
-
-
-            workEvent = SelectEvent;
 
             var dateStart = Work.DateEvent(SelectEvent.Start);
             var dateEnd = Work.DateEvent(SelectEvent.End);
 
             eventSummary.Text = SelectEvent.Summary;
-            eventStart.Value = dateStart.Date;
-            //eventStart.Value = DateTime.Parse(SelectEvent.Start.DateTime.ToString() ?? SelectEvent.Start.Date ?? SelectEvent.Start.DateTimeRaw);
-            eventEnd.Value = dateEnd.Date;
-            //eventEnd.Value = DateTime.Parse(SelectEvent.End.DateTime.ToString() ?? SelectEvent.End.Date ?? SelectEvent.End.DateTimeRaw).Date;
+            eventStart.Value = Work.DateEvent(SelectEvent.Start).Date;
+            eventEnd.Value = Work.DateEvent(SelectEvent.End).Date;
             eventDescription.Text = SelectEvent.Description;
+
             if (SelectEvent.Attendees != null)
             {
                 foreach (var attend in SelectEvent.Attendees)
@@ -54,7 +48,7 @@ namespace Google_Calendar_Desktop_App
                     eventAttendees.AppendText(attend.Email);
                 }
             }
-            
+
             eventLocation.Text = SelectEvent.Location;
 
             foreach (var calendar in AllCalendars)
@@ -62,9 +56,6 @@ namespace Google_Calendar_Desktop_App
                 CalendarsForEvents.Items.Add(calendar.Summary);
             }
             CalendarsForEvents.Text = SourceCalendar.Summary;
-
-
-
 
         }
 
@@ -78,13 +69,13 @@ namespace Google_Calendar_Desktop_App
             if (!string.IsNullOrWhiteSpace(eventSummary.Text))
             {
                 SelectEvent.Summary = SelectEvent.Summary == eventSummary.Text ? SelectEvent.Summary : eventSummary.Text;
-                SelectEvent.Start.DateTime = SelectEvent.Start.DateTime == eventStart.Value ? SelectEvent.Start.DateTime : eventStart.Value;
-                SelectEvent.End.DateTime = SelectEvent.End.DateTime == eventEnd.Value ? SelectEvent.End.DateTime : eventEnd.Value;
+                SelectEvent.Start.Date = SelectEvent.Start.Date == eventStart.Value.Date.ToString("yyyy-MM-dd") ? SelectEvent.Start.Date : eventStart.Value.Date.ToString("yyyy-MM-dd");
+                SelectEvent.End.Date = SelectEvent.End.Date == eventEnd.Value.Date.ToString("yyyy-MM-dd") ? SelectEvent.End.Date : eventEnd.Value.Date.ToString("yyyy-MM-dd");
                 SelectEvent.Description = string.IsNullOrWhiteSpace(eventDescription.Text) ? null : eventDescription.Text;
                 SelectEvent.Attendees = string.IsNullOrWhiteSpace(eventAttendees.Text) ? null : AttendeesForEvent(eventAttendees.Text);
                 SelectEvent.Location = string.IsNullOrWhiteSpace(eventLocation.Text) ? null : eventLocation.Text;
 
-                Work.UpdateEvent(SelectEvent, SourceCalendar, SourceCalendar != AllCalendars[CalendarsForEvents.SelectedIndex] ? AllCalendars[CalendarsForEvents.SelectedIndex].Id : null);
+                Work.UpdateEvent(SelectEvent, SourceCalendar.Id, SourceCalendar != AllCalendars[CalendarsForEvents.SelectedIndex] ? AllCalendars[CalendarsForEvents.SelectedIndex].Id : null);
                 Close();
             }
             else
@@ -92,11 +83,16 @@ namespace Google_Calendar_Desktop_App
                 MessageBox.Show("Название не может быть пустым!");
             }
 
-            
+
 
 
         }
 
+        /// <summary>
+        /// Создание списка гостей
+        /// </summary>
+        /// <param name="text">Гости</param>
+        /// <returns>Список гостей</returns>
         private List<EventAttendee> AttendeesForEvent(string text)
         {
             List<EventAttendee> attendees = new List<EventAttendee>();
@@ -113,6 +109,22 @@ namespace Google_Calendar_Desktop_App
         {
             Work.DeleteEvent(SelectEvent, SourceCalendar.Id);
             Close();
+        }
+
+        private void eventStart_ValueChanged(object sender, EventArgs e)
+        {
+            if (eventStart.Value > eventEnd.Value)
+            {
+                eventEnd.Value = eventStart.Value;
+            }
+        }
+
+        private void eventEnd_ValueChanged(object sender, EventArgs e)
+        {
+            if (eventEnd.Value < eventStart.Value)
+            {
+                eventStart.Value = eventEnd.Value;
+            }
         }
     }
 }

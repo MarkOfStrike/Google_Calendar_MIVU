@@ -10,9 +10,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Google_Calendar_Desktop_App
@@ -22,17 +20,27 @@ namespace Google_Calendar_Desktop_App
         /// <summary>
         /// Данные пользователя
         /// </summary>
-        private CalendarService Service { get; set; }
+        private CalendarService Service;
 
         /// <summary>
         /// Имя пользователя
         /// </summary>
-        public string User { get; set; }
+        public string User { get; private set; }
+
+        /// <summary>
+        /// Сообщение об ошибки
+        /// </summary>
+        private bool ErrorMsg = true;
 
         /// <summary>
         /// Соединение с интернетом
         /// </summary>
-        public static bool isConnect { get; set; }
+        private bool isConnect { get; set; }
+
+        /// <summary>
+        /// Таймер
+        /// </summary>
+        private System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
 
         /// <summary>
         /// Набор символов для идентификатора
@@ -49,10 +57,15 @@ namespace Google_Calendar_Desktop_App
         /// </summary>
         /// <param name="keyFilePath"></param>
         /// <param name="user"></param>
-        public CalendarWork(string keyFilePath, string user)
+        public CalendarWork(string keyFilePath, string user, string pass)
         {
             User = user;
             Identity = NewIdent();
+
+            Check_Connect();
+
+            timer1.Interval = 5000;
+            timer1.Tick += TimerCheck_Tick;
 
             StartTimer();
 
@@ -69,9 +82,9 @@ namespace Google_Calendar_Desktop_App
 
                 using (var stream = new FileStream(keyFilePath, FileMode.Open, FileAccess.Read))
                 {
-                    string credPath = "token.json";
+                    string credPath = "UsersToken";
                     credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                        GoogleClientSecrets.Load(stream).Secrets, Scopes, user, CancellationToken.None,
+                        GoogleClientSecrets.Load(stream).Secrets, Scopes, User, CancellationToken.None,
                         new FileDataStore(credPath, true)).Result;
                 }
 
@@ -81,13 +94,47 @@ namespace Google_Calendar_Desktop_App
                     ApplicationName = "My Calendar v0.1",
                 });
 
-                MessageBox.Show("Авторизация выполнена!");
+
+                WorkBD.Execution_query($"if not exists(select Id from Users where UserName = N'{user}') insert into Users (UserName, userPass) values (N'{user}', N'{pass}')");
 
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"На данный момент подключение к интернету отсутствует \n{ex.Message}");
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        /// <summary>
+        /// Собтие тика таймера
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TimerCheck_Tick(object sender, EventArgs e)
+        {
+            Check_Connect();
+        }
+
+        /// <summary>
+        /// Запустить таймер
+        /// </summary>
+        public void StartTimer()
+        {
+            timer1.Start();
+        }
+
+        /// <summary>
+        /// Остановить таймер
+        /// </summary>
+        public void StopTimer()
+        {
+            timer1.Stop();
+            isConnect = false;
+        }
+
+        /// <summary>
+        /// Проверка на соединение с интернетом
+        /// </summary>
+        /// <returns>Соединение с интернетом</returns>
+        public bool IsConnect()
+        {
+            return isConnect;
         }
 
         /// <summary>
@@ -97,63 +144,6 @@ namespace Google_Calendar_Desktop_App
         {
             StartTimer();
         }
-
-        /// <summary>
-        /// Таймер
-        /// </summary>
-        private static void StartTimer()
-        {
-            TimerCallback tm = new TimerCallback(Check_Connect);
-            System.Threading.Timer timer = new System.Threading.Timer(tm, isConnect, 0, 5000);
-        }
-
-        ///// <summary>
-        ///// Получение определенного количества событий
-        ///// </summary>
-        ///// <param name="calendarName">Идентификатор календаря</param>
-        ///// <param name="maxRes">Количество результатов</param>
-        ///// <returns>События</returns>
-        //public Events GetEvents(string calendarName = "primary", int maxRes = 10)
-        //{
-        //    Events events = null;
-
-        //    if (isConnect)
-        //    {
-        //        EventsResource.ListRequest request = Service.Events.List(calendarName);//В скобках название календаря 'primary' использует календарь по умолчанию
-        //        request.TimeMin = DateTime.Now;
-        //        request.ShowDeleted = false;
-        //        request.SingleEvents = true;
-        //        request.MaxResults = maxRes;
-        //        request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
-
-        //        events = request.Execute();
-        //    }
-        //    else
-        //    {
-        //        if (calendarName == "primary")
-        //        {
-        //            calendarName = "primary:true";
-        //        }
-
-        //        var event_s = WorkBD.Select_query($"select top({maxRes}) ec.Calendar_event from Activity a, Name_Calendar nc, Events_calendar ec where ec.Id = a.EvendId and Date_Event > '{DateTime.Now}'  and a.NameId = (select id from Name_Calendar where calendar_name like '%{calendarName}%') order by Date_Event");
-
-        //        List<Event> ev = new List<Event>();
-
-        //        while (event_s.Read())
-        //        {
-        //            events.Items.Add(JsonConvert.DeserializeObject<Event>(event_s.GetString(0)));
-        //        }
-
-        //        events.Items.OrderBy(x => x.Start);
-
-
-
-        //    }
-
-            
-        //    return events;
-
-        //}
 
         /// <summary>
         /// Получение всех событий
@@ -167,7 +157,7 @@ namespace Google_Calendar_Desktop_App
             if (isConnect)
             {
                 EventsResource.ListRequest request = Service.Events.List(calendarName);//В скобках название календаря 'primary' использует календарь по умолчанию
-                request.TimeMin = new DateTime(1970, 1, 1, 0,0,0);
+                request.TimeMin = new DateTime(1970, 1, 1, 0, 0, 0);
                 request.ShowDeleted = false;
                 request.SingleEvents = true;
                 request.MaxResults = 2500;
@@ -186,13 +176,24 @@ namespace Google_Calendar_Desktop_App
                     calendarName = "primary:true";
                 }
 
-                var event_s = WorkBD.Select_query($"select case when cast(ec.Id_Event as nvarchar(max)) = cast(me.Id_Mod_Event as nvarchar(max))  then me.New_Event else ec.Calendar_event end from Events_calendar ec, Mod_Event me, Activity a, Name_Calendar nc where ec.Id = a.EvendId and nc.Id = a.NameId and not exists(select * from Del_Event where Event_Cal_id = a.Id) and a.NameId = (select id from Name_Calendar where calendar_name like N'%{calendarName}%')");
+                var event_s = WorkBD.Select_query($"select case ec.Id_Event when me.Id_Mod_Event then case a.NameId when me.New_Calendar then me.New_Event end else ec.Calendar_event end  from Events_calendar ec, Activity a left join Mod_Event me on me.RecordId = a.Id where ec.Id = a.EvendId and a.NameId = (select Id from Name_Calendar where Id_Calendar = N'{calendarName}' and Id_User = (select Id from Users where UserName = N'{User}'))");
 
-                var event_sLocal = WorkBD.Select_query($"select New_Ev from Ins_Event where Cal_Id = (select id from Name_Calendar where calendar_name like N'%{calendarName}%')");
-                
+                var event_mod = WorkBD.Select_query($"select me.New_Event from Mod_Event me, Activity a where me.New_Calendar = (select Id from Name_Calendar where Id_Calendar = N'{calendarName}' and Id_User = (select Id from Users where UserName = N'{User}')) and a.Id = me.RecordId and me.New_Calendar != a.NameId");
+
+                var event_sLocal = WorkBD.Select_query($"select New_Ev from Ins_Event where Cal_Id = (select id from Name_Calendar where calendar_name like N'%{calendarName}%' and Id_User = (select Id from Users where UserName = N'{User}'))");
+
                 foreach (DataRow even in event_s.Rows)
                 {
-                    events.Add(JsonConvert.DeserializeObject<Event>(even.ItemArray[0].ToString()));
+                    if (!string.IsNullOrWhiteSpace(even.ItemArray[0].ToString()))
+                    {
+                        events.Add(JsonConvert.DeserializeObject<Event>(even.ItemArray[0].ToString()));
+                    }
+
+                }
+
+                foreach (DataRow evenMod in event_mod.Rows)
+                {
+                    events.Add(JsonConvert.DeserializeObject<Event>(evenMod.ItemArray[0].ToString()));
                 }
 
                 foreach (DataRow evenLocal in event_sLocal.Rows)
@@ -200,15 +201,10 @@ namespace Google_Calendar_Desktop_App
                     events.Add(JsonConvert.DeserializeObject<Event>(evenLocal.ItemArray[0].ToString()));
                 }
 
-                
-
             }
-
-            events.OrderBy(x => x.Start);
 
             return events;
         }
-
 
         /// <summary>
         /// Создание нового события в календаре
@@ -223,7 +219,7 @@ namespace Google_Calendar_Desktop_App
         {
             Event body = new Event();
 
-            
+
             if (Emails != null)
             {
                 List<EventAttendee> attendees = new List<EventAttendee>();
@@ -234,14 +230,14 @@ namespace Google_Calendar_Desktop_App
 
                 body.Attendees = attendees;
             }
-            
+
 
 
             EventDateTime _start = new EventDateTime();
-            _start.Date = start.Date.ToString();
+            _start.Date = start.Date.ToString("yyyy-MM-dd");
 
             EventDateTime _end = new EventDateTime();
-            _end.Date = end.Date.ToString();
+            _end.Date = end.Date.ToString("yyyy-MM-dd");
 
             body.Start = _start;
             body.End = _end;
@@ -256,7 +252,6 @@ namespace Google_Calendar_Desktop_App
 
                 Event response = request.Execute();
 
-                MessageBox.Show("Событие создано!");
             }
             else
             {
@@ -265,9 +260,8 @@ namespace Google_Calendar_Desktop_App
                     body.Id += Identity[ran.Next(0, Identity.Length)].ToString();
                 }
 
-                WorkBD.Execution_query($"insert into Ins_Event (Cal_Id, New_Ev, Id_New_Ev) values ((select Id from Name_Calendar where Id_Calendar = N'{calendarName}'), N'{JsonConvert.SerializeObject(body)}', N'{body.Id}')");
+                WorkBD.Execution_query($"insert into Ins_Event (Cal_Id, New_Ev, Id_New_Ev) values ((select Id from Name_Calendar where Id_Calendar = N'{calendarName}' and Id_User = (select Id from Users where UserName = N'{User}')), N'{JsonConvert.SerializeObject(body)}', N'{body.Id}')");
 
-                MessageBox.Show("Запись добавлена в локальную базу данных!");
             }
 
 
@@ -275,15 +269,15 @@ namespace Google_Calendar_Desktop_App
         }
 
         /// <summary>
-       /// Создание нового события в календаре
-       /// </summary>
-       /// <param name="event">Событие</param>
-       /// <param name="calendarId">Id календаря</param>
+        /// Создание нового события в календаре
+        /// </summary>
+        /// <param name="event">Событие</param>
+        /// <param name="calendarId">Id календаря</param>
         public void CreateEvent(Event newEvent, string calendarId)
         {
-                EventsResource.InsertRequest request = new EventsResource.InsertRequest(Service, newEvent, calendarId);
-                Event response = request.Execute();
-            
+            EventsResource.InsertRequest request = new EventsResource.InsertRequest(Service, newEvent, calendarId);
+            Event response = request.Execute();
+
         }
 
         /// <summary>
@@ -295,13 +289,8 @@ namespace Google_Calendar_Desktop_App
             if (isConnect)
             {
                 EventsResource.DeleteRequest request = new EventsResource.DeleteRequest(Service, calendarName, eventForDel.Id);
-                //WorkBD.Open_con();
                 WorkBD.Execution_query($"delete from Events_calendar where Id_Event = N'{eventForDel.Id}'");
-                //WorkBD.Close_con();
-                //Event response = request.Execute();
                 request.Execute();
-
-                //MessageBox.Show("Событие удалено!");
             }
             else
             {
@@ -313,11 +302,7 @@ namespace Google_Calendar_Desktop_App
                 {
 
                     idEvent = int.Parse(result.Rows[0].ItemArray[0].ToString());
-
                     WorkBD.Execution_query($"insert into Del_Event (Event_Cal_id) values ((select Id from Activity where EvendId = {idEvent}))");
-
-                    MessageBox.Show("Событие добавлено на очередь для удаления!");
-
                 }
                 else
                 {
@@ -329,8 +314,6 @@ namespace Google_Calendar_Desktop_App
                         idEvent = int.Parse(nextVariant.Rows[0].ItemArray[0].ToString());
 
                         WorkBD.Execution_query($"delete from Ins_Event where Id = {idEvent}");
-
-                        MessageBox.Show("Событие удалено из локальной базы данных");
 
                     }
 
@@ -345,34 +328,24 @@ namespace Google_Calendar_Desktop_App
         /// <param name="new_event">Новая запись</param>
         /// <param name="calendar">Календарь</param>
         /// <param name="source_event">Исходная запись</param>
-        public void UpdateEvent(Event new_event, CalendarListEntry calendar, string newCalendarId = null, Event source_event = null)
+        public void UpdateEvent(Event new_event, string sourceCalendarId, string newCalendarId = null)
         {
             if (isConnect)
             {
-                EventsResource.UpdateRequest request = new EventsResource.UpdateRequest(Service, new_event, calendar.Id, new_event.Id);//Вместо User использовать название календаря
+                EventsResource.UpdateRequest request = new EventsResource.UpdateRequest(Service, new_event, sourceCalendarId, new_event.Id);
                 Event resource = request.Execute();
+                WorkBD.Execution_query($"delete from Events_calendar where Id_Event = N'{resource.Id}'");
                 if (newCalendarId != null)
                 {
-                    MoveEvent(resource.Id, calendar.Id, newCalendarId);
+                    MoveEvent(resource.Id, sourceCalendarId, newCalendarId);
                 }
-                //MessageBox.Show("Красава, получилось");
             }
             else
             {
-                //var checkEvent = WorkBD.Select_query($"select");
+                WorkBD.Execution_query($"if exists(select Id from Events_calendar where Id_Event = N'{new_event.Id}') if exists(select Id from Mod_Event where Id_Mod_Event = N'{new_event.Id}') update Mod_Event set New_Event = N'{JsonConvert.SerializeObject(new_event)}', New_Calendar = (select Id from Name_Calendar where Id_Calendar = N'{newCalendarId}' and Id_User = (select Id from Users where UserName = N'{User}')) where Id_Mod_Event = N'{new_event.Id}' else insert into Mod_Event (RecordId, New_Event, New_Calendar, Id_Mod_Event) values ((select Id from Activity where EvendId = (select Id from Events_calendar where Id_Event = N'{new_event.Id}')), N'{JsonConvert.SerializeObject(new_event)}', (select Id from Name_Calendar where Id_Calendar = N'{newCalendarId}' and Id_User = (select Id from Users where UserName = N'{User}')), N'{new_event.Id}') else update Ins_Event set New_Ev = N'{JsonConvert.SerializeObject(new_event)}', Cal_Id = (select Id from Name_Calendar where Id_Calendar = N'{newCalendarId ?? sourceCalendarId}' and Id_User = (select Id from Users where UserName = N'{User}')) where Id_New_Ev = N'{new_event.Id}'");
+                WorkBD.Execution_query($"if exists(select me.Id from Mod_Event me, Events_calendar ec where me.New_Event = ec.Calendar_event and me.Id_Mod_Event = N'{new_event.Id}' and ec.Id_Event = N'{new_event.Id}' and me.New_Calendar = (select ac.NameId from Activity ac where ac.EvendId = (select Id from Events_calendar where Id_Event = N'{new_event.Id}'))) delete from Mod_Event where Id_Mod_Event = N'{new_event.Id}'");
 
-
-                WorkBD.Execution_query($"if exists(select Id from Events_calendar where Id_Event = N'{new_event.Id}') if exists(select Id from Mod_Event where Id_Mod_Event = N'{new_event.Id}') update Mod_Event set New_Event = N'{JsonConvert.SerializeObject(new_event)}' where Id_Mod_Event = N'{new_event.Id}' else insert into Mod_Event (RecordId, New_Event, New_Calendar, Id_Mod_Event) values ((select Id from Activity where EvendId = (select Id from Events_calendar where Id_Event = N'{new_event.Id}')), N'{JsonConvert.SerializeObject(new_event)}', (select Id from Name_Calendar where Id_Calendar = N'{newCalendarId}'), N'{new_event.Id}') else update Ins_Event set New_Ev = N'{JsonConvert.SerializeObject(new_event)}' where Id_New_Ev = N'{new_event.Id}'");
-                WorkBD.Execution_query($"if exists(select me.Id from Mod_Event me, Events_calendar ec where me.New_Event = ec.Calendar_event and me.Id_Mod_Event = N'{new_event.Id}' and ec.Id_Event = N'{new_event.Id}') delete from Mod_Event where Id_Mod_Event = N'{new_event.Id}'");
-
-
-                //WorkBD.Execution_query($"insert into Mod_Event (RecordId, New_Event, New_Calendar) values ((select Id from Activity where EvendId = (select Id from Events_calendar where Calendar_event = N'{JsonConvert.SerializeObject(source_event)}')), N'{JsonConvert.SerializeObject(new_event)}', (select Id from Name_Calendar where calendar_name = N'{JsonConvert.SerializeObject(calendar)}'))");
             }
-
-
-            
-
-            MessageBox.Show("Событие обновлено");
 
         }
 
@@ -403,7 +376,9 @@ namespace Google_Calendar_Desktop_App
 
                 result.Items.OrderBy(x => x.Summary);
 
-                return result.Items.ToList();
+                ErrorMsg = true;
+
+                return result.Items.ToList().OrderBy(x => x.AccessRole).ThenBy(p => p.Summary).ToList();
 
             }
             else
@@ -411,57 +386,51 @@ namespace Google_Calendar_Desktop_App
                 List<CalendarListEntry> calendarLists = new List<CalendarListEntry>();
 
 
-                var caList = WorkBD.Select_query($"select calendar_name from Name_Calendar");
+                var caList = WorkBD.Select_query($"select calendar_name from Name_Calendar where Id_User = (select Id from Users where UserName = N'{User}')");
 
                 foreach (DataRow rowcalendar in caList.Rows)
                 {
                     calendarLists.Add(JsonConvert.DeserializeObject<CalendarListEntry>(rowcalendar.ItemArray[0].ToString()));
                 }
 
-                calendarLists.OrderBy(x => x.Summary);
+                if (calendarLists.Count == 0)
+                {
+                    if (ErrorMsg)
+                    {
+                        MessageBox.Show("Отсутствует список календарей в локальной базе данных! Пожалуйста подключитесь к интернету и перезапустите программу для синхронизации ланных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ErrorMsg = false;
+                    }
+                }
 
-                return calendarLists;
+                return calendarLists.OrderBy(x => x.AccessRole).ThenBy(p => p.Summary).ToList();
 
-                //caList.Close();
             }
 
-
-            
-            
-            
         }
 
         /// <summary>
         /// Проверка интернет соединения
         /// </summary>
         /// <returns></returns>
-        private static void Check_Connect(object obj)
+        private void Check_Connect()
         {
-
-            isConnect = false;
-
-            #region Проверка соединения
-
-            //try
-            //{
-            //    using (var client = new WebClient())
-            //    using (client.OpenRead("http://google.com/generate_204"))
-            //        isConnect = true;
-            //}
-            //catch
-            //{
-            //    isConnect = false;
-            //}
-
-            #endregion
-
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("http://google.com/generate_204"))
+                    isConnect = true;
+            }
+            catch
+            {
+                isConnect = false;
+            }
         }
 
         /// <summary>
         /// Набор символов для идентификаторов
         /// </summary>
         /// <returns>Массив символов</returns>
-        private char [] NewIdent()
+        private char[] NewIdent()
         {
             List<char> mas = new List<char>();
 
@@ -492,7 +461,7 @@ namespace Google_Calendar_Desktop_App
                 {
                     if (string.IsNullOrWhiteSpace(dateTime.DateTimeRaw))
                     {
-                        return new DateTime(1970, 1, 1, 0,0,0);
+                        return new DateTime(1970, 1, 1, 0, 0, 0);
                     }
                     else
                     {
@@ -509,7 +478,32 @@ namespace Google_Calendar_Desktop_App
                 return Convert.ToDateTime(dateTime.Date);
             }
 
-            
+
+        }
+
+        /// <summary>
+        /// Сортировка событий календаря
+        /// </summary>
+        /// <param name="events">Список событий</param>
+        /// <returns>Отсортированный список событий</returns>
+        public List<Event> SortEvents(List<Event> events)
+        {
+            Event tmpEvent;
+
+            for (int i = 0; i < events.Count; i++)
+            {
+                for (int j = i + 1; j < events.Count; j++)
+                {
+                    if (DateEvent(events[i].Start) > DateEvent(events[j].Start))
+                    {
+                        tmpEvent = events[i];
+                        events[i] = events[j];
+                        events[j] = tmpEvent;
+                    }
+                }
+            }
+
+            return events;
         }
 
     }

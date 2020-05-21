@@ -72,6 +72,7 @@
             this.eventEnd.Name = "eventEnd";
             this.eventEnd.Size = new System.Drawing.Size(91, 20);
             this.eventEnd.TabIndex = 48;
+            this.eventEnd.ValueChanged += new System.EventHandler(this.eventEnd_ValueChanged);
             // 
             // eventStart
             // 
@@ -80,6 +81,7 @@
             this.eventStart.Name = "eventStart";
             this.eventStart.Size = new System.Drawing.Size(94, 20);
             this.eventStart.TabIndex = 47;
+            this.eventStart.ValueChanged += new System.EventHandler(this.eventStart_ValueChanged);
             // 
             // eventSummary
             // 
@@ -219,8 +221,11 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddEvent";
-            this.Text = "AddEvent";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Добавление события";
             this.ResumeLayout(false);
             this.PerformLayout();
 

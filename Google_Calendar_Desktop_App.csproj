@@ -88,8 +88,17 @@
     <Compile Include="AddEvent.Designer.cs">
       <DependentUpon>AddEvent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Autorization.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Autorization.Designer.cs">
+      <DependentUpon>Autorization.cs</DependentUpon>
+    </Compile>
     <Compile Include="CalendarWork.cs" />
     <Compile Include="Calendar_Events.cs" />
+    <Compile Include="CryptoPass.cs" />
+    <Compile Include="Dates.cs" />
+    <Compile Include="Images_Calendar.cs" />
     <Compile Include="InfoEvent.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,17 +111,29 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PrintCalendarForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrintCalendarForm.Designer.cs">
+      <DependentUpon>PrintCalendarForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkBD.cs" />
     <EmbeddedResource Include="AddEvent.resx">
       <DependentUpon>AddEvent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Autorization.resx">
+      <DependentUpon>Autorization.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InfoEvent.resx">
       <DependentUpon>InfoEvent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintCalendarForm.resx">
+      <DependentUpon>PrintCalendarForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
