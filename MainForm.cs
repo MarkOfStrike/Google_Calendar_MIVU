@@ -26,7 +26,7 @@ namespace Google_Calendar_Desktop_App
         private List<Calendar_Events> Calendar_s = new List<Calendar_Events>();
         private CalendarWork work;
 
-        static Semaphore sem;
+        readonly SemaphoreSlim sem = new SemaphoreSlim(1, 1);
 
         private bool start = true;
 
@@ -39,7 +39,6 @@ namespace Google_Calendar_Desktop_App
 
             this.Icon = Resources.Google_Calendar_icon_icons_com_75710;
 
-            sem = new Semaphore(1, 1);
 
             work = new CalendarWork("credentials.json", user, pass);
 
@@ -545,7 +544,6 @@ namespace Google_Calendar_Desktop_App
                         else
                         {
                             WorkBD.Execution_query($"if not exists(select Id from Events_calendar where Id_Event = N'{events.Id}') insert into Events_calendar (Calendar_event, Id_Event) values (N'{JsonConvert.SerializeObject(events)}', N'{events.Id}')");
-                            Thread.Sleep(10);
                             WorkBD.Execution_query($"insert into Activity (NameId, EvendId, Date_Event) values ((select Id from Name_Calendar where Id_Calendar = N'{items.calendar.Id}' and Id_User = (select Id from Users where UserName = N'{work.User}')), (select Id from Events_calendar where Id_Event = N'{events.Id}'), CONVERT(DATETIME, N'{work.DateEvent(events.Start).ToString("yyyyMMdd HH:mm:ss")}', 102) )");
                         }
 
@@ -609,11 +607,16 @@ namespace Google_Calendar_Desktop_App
         /// <param name="action">Делегат метода</param>
         private async void AsyncRunMethod(Action action)
         {
-            start = false;
+            await sem.WaitAsync();
+            try
+            {
+                await Task.Run(action);
+            }
+            finally
+            {
+                sem.Release();
+            }
 
-            await Task.Factory.StartNew(action);
-
-            start = true;
         }
 
         #endregion
@@ -621,18 +624,7 @@ namespace Google_Calendar_Desktop_App
 
         private void updEvent_Tick(object sender, EventArgs e)
         {
-
-
-            //if (start)
-            //{
             AsyncRunMethod(() => Synchronization());
-            //}
-
-
-
-
-
-
         }
 
         private void calendarsItem_SelectedValueChanged(object sender, EventArgs e)
